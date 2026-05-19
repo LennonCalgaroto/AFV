@@ -4,21 +4,28 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AFV Recursos Humanos</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="site-header">
       <div class="container header-inner">
         <a class="brand" href="/">
-          <img src="assets/logo.png" alt="AFV Recursos Humanos" class="logo" />
-          <div class="brand-text">
+          <picture>
+            <source srcset="assets/logo.png" type="image/png" />
+            <img src="assets/logo.svg" alt="AFV Recursos Humanos" class="logo" />
+          </picture>
+          <div class="brand-text" aria-hidden="false">
             <h1>AFV Recursos Humanos</h1>
             <p class="tagline">Conectando talentos, fortalecendo empresas</p>
           </div>
         </a>
-        <nav class="contact-nav" aria-label="contato">
-          <a href="mailto:afvrecursoshumanos@gmail.com">afvrecursoshumanos@gmail.com</a>
-          <a href="tel:+554789083815">(47)98908-3815</a>
+        <nav class="nav" aria-label="main navigation">
+          <a href="#servicos">Serviços</a>
+          <a href="#quem-somos">Quem somos</a>
+          <a href="#contato">Contato</a>
+          <a class="btn" href="#contato">Fale conosco</a>
         </nav>
       </div>
     </header>
@@ -30,15 +37,24 @@
     <main>
       <section class="hero">
         <div class="container">
-          <h2>AFV Recursos Humanos</h2>
-          <p class="hero-sub">Conectando talentos, fortalecendo empresas</p>
-          <p class="hero-cta">Entre em contato e descubra como podemos ajudar sua organização.</p>
+          <div class="hero-inner">
+            <div class="left">
+              <p class="kicker">AFV Recursos Humanos</p>
+              <h2>Conectando talentos, fortalecendo empresas</h2>
+              <p class="hero-sub">Apoio em recrutamento, seleção e soluções de RH sob medida para o crescimento da sua organização.</p>
+              <p class="hero-cta"><a class="btn" href="#contato">Solicitar atendimento</a> <a class="btn secondary" href="#servicos">Nossos serviços</a></p>
+            </div>
+            <div class="right">
+              <!-- placeholder illustration -->
+              <div class="hero-illustration" aria-hidden="true"></div>
+            </div>
+          </div>
         </div>
       </section>
 
       <section class="content container">
-        <article class="card">
-          <h3> Quem somos</h3>
+        <article id="quem-somos" class="card">
+          <h3>Quem somos</h3>
           <p>
             A AFV Recursos Humanos nasceu com o propósito de conectar empresas às pessoas certas, de forma ética, estratégica e humanizada. Atuamos apoiando organizações na gestão de pessoas, oferecendo soluções eficientes em recrutamento, seleção e serviços de apoio administrativo.
           </p>
@@ -47,8 +63,8 @@
           </p>
         </article>
 
-        <article class="card">
-          <h3> Nossa missão</h3>
+        <article id="sobre" class="card">
+          <h3>Nossa missão</h3>
           <p>
             Promover soluções em Recursos Humanos que contribuam para o crescimento sustentável das empresas, valorizando talentos e fortalecendo relações profissionais.
           </p>
@@ -66,8 +82,8 @@
           </ul>
         </article>
 
-        <article class="card">
-          <h3> Nossos serviços</h3>
+        <article id="servicos" class="card">
+          <h3>Nossos serviços</h3>
           <h4> Recrutamento e Seleção</h4>
           <p>Conduzimos processos seletivos completos, alinhados às necessidades da sua empresa, identificando profissionais qualificados e compatíveis com a cultura organizacional.</p>
 
@@ -80,8 +96,8 @@
           <p class="muted">(Esses serviços podem ser ajustados conforme o que vocês realmente oferecem)</p>
         </article>
 
-        <article class="card contact-card">
-          <h3> Por que escolher a AFV Recursos Humanos?</h3>
+        <article id="contato" class="card contact-card">
+          <h3>Por que escolher a AFV Recursos Humanos?</h3>
           <ul>
             <li>Atendimento personalizado</li>
             <li>Processos humanizados</li>
@@ -90,13 +106,26 @@
             <li>Compromisso com a qualidade</li>
           </ul>
 
-          <h3> Entre em contato</h3>
+          <h3>Entre em contato</h3>
           <p>Estamos prontos para apoiar sua empresa ou sua carreira profissional. Entre em contato conosco e descubra como a AFV Recursos Humanos pode ajudar você a alcançar melhores resultados.</p>
 
+          <form id="contactForm" class="contact-form">
+            <label for="name">Nome</label>
+            <input id="name" name="name" type="text" required />
+
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" required />
+
+            <label for="message">Mensagem</label>
+            <textarea id="message" name="message" rows="4" required></textarea>
+
+            <p><button type="submit" class="btn">Enviar mensagem</button></p>
+          </form>
+
           <address>
-            <strong> Blumenau  SC</strong><br />
-             <a href="mailto:afvrecursoshumanos@gmail.com">afvrecursoshumanos@gmail.com</a><br />
-             <a href="tel:+554789083815">(47)98908-3815</a>
+            <strong>Blumenau – SC</strong><br />
+            📧 <a href="mailto:afvrecursoshumanos@gmail.com">afvrecursoshumanos@gmail.com</a><br />
+            📱 <a href="tel:+5547989083815">(47) 98908-3815</a>
           </address>
         </article>
       </section>
@@ -111,6 +140,19 @@
     <script>
       // Atualiza o ano no rodapé
       document.getElementById('year').textContent = new Date().getFullYear();
+      // Contact form -> open mail client with prefilled content
+      const form = document.getElementById('contactForm');
+      if (form) {
+        form.addEventListener('submit', function(e){
+          e.preventDefault();
+          const name = document.getElementById('name').value.trim();
+          const email = document.getElementById('email').value.trim();
+          const message = document.getElementById('message').value.trim();
+          const subject = encodeURIComponent('Contato via site — ' + name);
+          const body = encodeURIComponent(`Nome: ${name}%0AEmail: ${email}%0A%0A${message}`);
+          window.location.href = `mailto:afvrecursoshumanos@gmail.com?subject=${subject}&body=${body}`;
+        });
+      }
     </script>
   </body>
 </html>
