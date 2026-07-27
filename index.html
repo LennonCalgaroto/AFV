@@ -164,6 +164,67 @@
 
       </article>
 
+      <section id="depoimentos" class="testimonials container card animate-on-scroll">
+
+        <h2 class="section-title">Feedbacks</h2>
+
+        <div class="testimonials-banner" aria-live="polite">
+
+          <div class="testimonial" data-index="0">
+            <div class="media">
+              <img src="assets/DrRanieri.png" alt="Foto do cliente 1" />
+            </div>
+            <div class="content">
+              <h3>Dr. Ranieri Marchi</h3>
+              <h4 class="subtitle">Clínica Pro Mater</h4>
+              <p class="quote">"Conheci profissionalmente a Ana Paula, em maio de 2025.
+                Se mostrou desde o início uma profissional diferenciada para o melhor. Sempre muito solícita, capacitada
+                e resolutiva. Sabe lidar com os problemas e com as pessoas de maneira simples e encantadora."</p>
+            </div>
+          </div>
+
+          <div class="testimonial" data-index="1">
+            <div class="media">
+              <img src="assets/DrRene.png" alt="Foto do Dr. René" />
+            </div>
+            <div class="content">
+              <h3>Dr. René Juliás Costa Silva</h3>
+              <h4 class="subtitle">CIPAC Diagnósticos</h4>
+              <p class="quote">"A Ana Paula sempre demonstrou profissionalismo e comprometimento no desempenho de suas
+                atividades no CIPAC.
+                Um dos aspectos que mais valorizo em seu trabalho é a comunicação. Suas mensagens são sempre claras,
+                objetivas e bem estruturadas, o que facilita muito a resolução das demandas do dia a dia. Além disso,
+                ela é extremamente prestativa e transmite segurança em todas as interações, características que
+                considero essenciais para quem atua na área de Recursos Humanos.
+                Embora eu não acompanhe diretamente toda a rotina do setor, a percepção que tenho, tanto pelas
+                interações que presencio quanto pelos comentários da equipe, é de que a Ana Paula é uma profissional
+                muito paciente para ouvir os colaboradores e conduzir as situações com respeito e equilíbrio.
+                Tenho plena confiança no seu trabalho e acredito que essas qualidades fazem dela uma excelente
+                profissional."</p>
+            </div>
+          </div>
+
+          <!-- <div class="testimonial" data-index="2">
+            <div class="media">
+              <img src="assets/client3.jpg" alt="Foto do cliente 3" />
+            </div>
+            <div class="content">
+              <h3>Nome do Cliente 3</h3>
+              <h4 class="subtitle">Cargo / Empresa</h4>
+              <p class="quote">Serviço ágil e transparente. Muito satisfeitos com o suporte prestado pela AFV.</p>
+            </div>
+          </div> -->
+
+        </div>
+
+        <div class="testimonial-controls" aria-hidden="false">
+          <button class="testimonial-btn prev" aria-label="Depoimento anterior">‹</button>
+          <div class="indicators" role="tablist" aria-label="Navegação de depoimentos"></div>
+          <button class="testimonial-btn next" aria-label="Próximo depoimento">›</button>
+        </div>
+
+      </section>
+
       <article id="contato" class="card contact-card animate-on-scroll">
 
         <h2 class="section-title">Solicite um atendimento</h2>
@@ -266,6 +327,150 @@
 
       location.href = `mailto:afvrecursoshumanos@gmail.com?subject=${subject}&body=${body}`;
     });
+
+    // Testimonial carousel + responsive read-more/modal
+    (function () {
+      const container = document.querySelector('.testimonials-banner');
+      if (!container) return;
+
+      const testimonials = Array.from(container.querySelectorAll('.testimonial'));
+      const indicatorsContainer = document.querySelector('.indicators');
+      const prevBtn = document.querySelector('.testimonial-btn.prev');
+      const nextBtn = document.querySelector('.testimonial-btn.next');
+      const INTERVAL = 15000; // 15s
+      let current = 0;
+      let timer = null;
+
+      function createIndicators() {
+        testimonials.forEach((t, idx) => {
+          const btn = document.createElement('button');
+          btn.className = 'testimonial-indicator';
+          btn.setAttribute('aria-label', `Mostrar depoimento ${idx + 1}`);
+          btn.addEventListener('click', () => { show(idx); restart(); });
+          indicatorsContainer.appendChild(btn);
+        });
+      }
+
+      function show(idx) {
+        if (idx < 0) idx = testimonials.length - 1;
+        if (idx >= testimonials.length) idx = 0;
+        testimonials.forEach((t, i) => t.classList.toggle('active', i === idx));
+        const inds = Array.from(document.querySelectorAll('.testimonial-indicator'));
+        inds.forEach((b, i) => b.classList.toggle('active', i === idx));
+        current = idx;
+      }
+
+      function next() { show(current + 1); }
+      function prev() { show(current - 1); }
+
+      function start() { stop(); timer = setInterval(next, INTERVAL); }
+      function stop() { if (timer) { clearInterval(timer); timer = null; } }
+      function restart() { stop(); start(); }
+
+      // build carousel
+      createIndicators();
+      show(0);
+      start();
+
+      // controls
+      nextBtn?.addEventListener('click', () => { next(); restart(); });
+      prevBtn?.addEventListener('click', () => { prev(); restart(); });
+
+      // pause on hover/focus
+      container.addEventListener('mouseenter', stop);
+      container.addEventListener('mouseleave', start);
+      container.addEventListener('focusin', stop);
+      container.addEventListener('focusout', start);
+
+      // Read-more / modal helpers
+      const MOBILE_BREAK = 900;
+      let modal = null;
+
+      function ensureModal() {
+        if (modal) return modal;
+        modal = document.createElement('div');
+        modal.className = 'tm-modal';
+        modal.innerHTML = `<div class="tm-content"><button class="tm-close" aria-label="Fechar">✕</button><div class="tm-body"></div></div>`;
+        document.body.appendChild(modal);
+        modal.querySelector('.tm-close').addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+        return modal;
+      }
+
+      function openModal(html) {
+        const m = ensureModal();
+        m.querySelector('.tm-body').innerHTML = html;
+        // add fallback for image load errors
+        const img = m.querySelector('.tm-body img');
+        if (img) {
+          img.onerror = () => { img.src = 'https://via.placeholder.com/96?text=Foto'; };
+        }
+        m.classList.add('open');
+        // move focus to close button
+        setTimeout(() => m.querySelector('.tm-close')?.focus(), 10);
+      }
+      function closeModal() { if (modal) modal.classList.remove('open'); }
+
+      function applyResponsiveReadMore() {
+        const isMobile = window.innerWidth <= MOBILE_BREAK;
+        testimonials.forEach(t => {
+          const quote = t.querySelector('.quote');
+          if (!quote) return;
+
+          // remove existing read-more if any
+          const existingBtn = t.querySelector('.read-more');
+          if (!isMobile) {
+            quote.classList.remove('clamped');
+            if (existingBtn) existingBtn.remove();
+            return;
+          }
+
+          // On mobile: apply clamp and add button if text overflows
+          // Temporarily measure natural height: remove clamp then measure
+          quote.classList.remove('clamped');
+          quote.style.maxHeight = 'none';
+          const fullHeight = quote.scrollHeight;
+
+          // apply clamp to measure constrained height
+          quote.classList.add('clamped');
+          // small delay to ensure styles applied
+          const constrainedHeight = quote.getBoundingClientRect().height;
+
+          if (fullHeight > constrainedHeight + 5) {
+            if (!existingBtn) {
+              const btn = document.createElement('button');
+              btn.className = 'read-more';
+              btn.type = 'button';
+              btn.textContent = 'Ler mais';
+              btn.addEventListener('click', () => {
+                const imgEl = t.querySelector('img');
+                const imgSrc = imgEl ? imgEl.getAttribute('src') : '';
+                const imgAlt = imgEl ? imgEl.getAttribute('alt') : '';
+                const name = t.querySelector('h3')?.textContent || '';
+                const subtitle = t.querySelector('.subtitle')?.textContent || '';
+                const text = quote.textContent || '';
+                const html = `\n                  <div class="tm-media"><img src="${imgSrc}" alt="${imgAlt}" /></div>\n                  <h3>${name}</h3>\n                  <h4 class="subtitle">${subtitle}</h4>\n                  <p>${text}</p>\n                `;
+                openModal(html);
+              });
+              t.querySelector('.content').appendChild(btn);
+            }
+          } else {
+            if (existingBtn) existingBtn.remove();
+            quote.classList.remove('clamped');
+          }
+
+        });
+      }
+
+      // run on load and resize (debounced)
+      let rTimer = null;
+      function onResize() { if (rTimer) clearTimeout(rTimer); rTimer = setTimeout(() => { applyResponsiveReadMore(); rTimer = null; }, 120); }
+      window.addEventListener('resize', onResize);
+      // initial
+      applyResponsiveReadMore();
+
+    })();
   </script>
 
 </body>

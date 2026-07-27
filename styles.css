@@ -362,6 +362,237 @@ body {
     transform: translateY(-2px);
 }
 
+/* Testimonials / Depoimentos banner */
+.testimonials {
+    background: linear-gradient(90deg, rgba(11,107,90,0.02), rgba(26,163,138,0.015));
+    padding: 2rem 0;
+}
+
+/* Center the banner area so it aligns with other .container content */
+.testimonials .testimonials-banner {
+    position: relative;
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 1.25rem;
+    min-height: 300px; /* aumentado para comportar depoimentos maiores sem scroll */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Each testimonial is a card-like panel that will stack; only .active is visible */
+.testimonial {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -10px);
+    opacity: 0;
+    pointer-events: none;
+    width: 100%;
+    max-width: 760px;
+    background: var(--card);
+    padding: 1.25rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .06);
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    transition: opacity .45s ease, transform .45s ease;
+    box-sizing: border-box;
+}
+
+/* Active testimonial becomes part of the normal flow and is centered like other cards */
+.testimonial.active {
+    opacity: 1;
+    pointer-events: auto;
+    position: relative;
+    transform: none;
+    left: auto;
+    top: auto;
+    margin: 0 auto;
+}
+
+/* layout: image + content */
+.testimonial .media {
+    flex: 0 0 88px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.testimonial img {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(11,107,90,0.06);
+}
+
+.testimonial .content {
+    flex: 1 1 auto;
+}
+
+.testimonial h3 {
+    margin: 0 0 0.15rem 0;
+    color: var(--accent);
+    font-size: 1.18rem;
+}
+
+.testimonial .subtitle {
+    margin: 0 0 0.6rem 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+/* Keep the quote area scrollable if very long to prevent expanding the card */
+.testimonial .quote {
+    margin: 0;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    /* por padrão exibimos tudo em desktop; em telas pequenas aplicamos clamp via JS */
+    max-height: none;
+    overflow: visible;
+    padding-right: 0.25rem;
+}
+
+/* Classe aplicada dinamicamente em telas pequenas para truncar o texto */
+.testimonial .quote.clamped {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5; /* mostra ~5 linhas em mobile; ajustável */
+    overflow: hidden;
+}
+
+.testimonial .quote::-webkit-scrollbar {
+    width: 8px;
+}
+.testimonial .quote::-webkit-scrollbar-thumb {
+    background: rgba(11,107,90,0.12);
+    border-radius: 8px;
+}
+
+/* Ler mais button */
+.read-more {
+    display: inline-block;
+    margin-top: .6rem;
+    background: transparent;
+    color: var(--accent);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+}
+
+.read-more:focus { outline: 2px solid rgba(11,107,90,0.12); border-radius: 6px; }
+
+/* Modal for full testimonial */
+.tm-modal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.5);
+    z-index: 2000;
+}
+.tm-modal.open { display: flex; }
+
+.tm-modal .tm-content {
+    background: var(--card);
+    border-radius: 12px;
+    max-width: 760px;
+    width: calc(100% - 2rem);
+    padding: 1.25rem;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    max-height: 80vh;
+    overflow: auto;
+}
+
+/* Modal media (photo) styling - ensure consistent sizing */
+.tm-modal .tm-content .tm-media {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+}
+
+.tm-modal .tm-content .tm-media img {
+    width: 96px;
+    height: 96px;
+    max-width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(11,107,90,0.06);
+}
+
+
+.tm-modal .tm-close {
+    background: transparent;
+    border: none;
+    color: var(--accent);
+    font-size: 1.4rem;
+    float: right;
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .testimonials .testimonials-banner { padding: 1rem; min-height: 220px; }
+    .testimonial { max-width: 94%; padding: 1rem; gap: .6rem; }
+    .testimonial .media { flex: 0 0 64px; }
+    .testimonial img { width: 64px; height: 64px; }
+    /* on mobile prefer clamp (applied by JS) */
+}
+
+.testimonial-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.testimonial-btn {
+    background: var(--card);
+    border: 1px solid rgba(11,107,90,0.08);
+    color: var(--accent);
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.testimonial-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+
+.indicators { display: flex; gap: .5rem; }
+
+.testimonial-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(11,107,90,0.18);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.testimonial-indicator.active {
+    background: var(--accent2);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+@media (max-width: 900px) {
+    .testimonials .testimonials-banner { padding: 1rem; min-height: 160px; }
+    .testimonial { max-width: 92%; padding: 1rem; gap: .75rem; }
+    .testimonial .media { flex: 0 0 64px; }
+    .testimonial img { width: 64px; height: 64px; }
+    .testimonial .quote { max-height: 8.5rem; }
+}
+
 @media(max-width:900px) {
 
     .services-grid {
