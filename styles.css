@@ -461,7 +461,8 @@ body {
 .testimonial .quote.clamped {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5; /* mostra ~5 linhas em mobile; ajustável */
+    -webkit-line-clamp: 5; /* fallback para navegadores baseados em WebKit/Blink */
+    line-clamp: 5; /* propriedade padrão para compatibilidade com navegadores modernos */
     overflow: hidden;
 }
 
